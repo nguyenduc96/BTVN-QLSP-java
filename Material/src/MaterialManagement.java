@@ -1,13 +1,13 @@
 import java.time.LocalDate;
 import java.util.Scanner;
 
-public class MaterialManagerment {
+public class MaterialManagement {
     private Material[] materials;
 
-    public MaterialManagerment() {
+    public MaterialManagement() {
     }
 
-    public MaterialManagerment(int size) {
+    public MaterialManagement(int size) {
         this.materials = new Material[size];
     }
 
@@ -21,15 +21,21 @@ public class MaterialManagerment {
 
     public Material[] deleteMaterial(int index) {
         Material[] newMaterials = new Material[this.materials.length - 1];
-        for (int i = 0; i < newMaterials.length; i++) {
-            if (i < index) {
-                newMaterials[i] = this.materials[i];
-            } else {
-                newMaterials[i] = this.materials[i + 1];
+        if (index < 0 || index >= materials.length) {
+            System.out.println("Not found !");
+        } else {
+            for (int i = 0; i < newMaterials.length; i++) {
+                if (i < index) {
+                    newMaterials[i] = this.materials[i];
+                } else {
+                    newMaterials[i] = this.materials[i + 1];
+                }
             }
+            materials = newMaterials;
         }
-        return newMaterials;
+        return materials;
     }
+
 
     public Material[] insertMeat(Scanner scanner, int index) {
         Material[] newMaterial = new Material[this.materials.length + 1];
@@ -59,7 +65,8 @@ public class MaterialManagerment {
                 newMaterial[i] = this.materials[i - 1];
             }
         }
-        return newMaterial;
+        materials = newMaterial;
+        return materials;
     }
 
     public Material[] insertCrispyFlour(Scanner scanner, int index) {
@@ -90,6 +97,7 @@ public class MaterialManagerment {
                 newMaterial[i] = this.materials[i - 1];
             }
         }
-        return newMaterial;
+        materials = newMaterial;
+        return materials;
     }
 }

@@ -7,11 +7,16 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Enter amount material : ");
         int size = scanner.nextInt();
-        MaterialManagerment materialManagerment = new MaterialManagerment(size);
-        Material[] materials = materialManagerment.getMaterials();
+        MaterialManagement materialManagement = new MaterialManagement(size);
+        Material[] materials = materialManagement.getMaterials();
         initMaterial(size, materials);
         System.out.println(Arrays.toString(materials));
-        int choice = -1;
+        int choice;
+        choiceMenu(scanner, materialManagement, materials);
+    }
+
+    private static void choiceMenu(Scanner scanner, MaterialManagement materialManagement, Material[] materials) {
+        int choice;
         do {
             menu();
             System.out.print("Enter choice : ");
@@ -19,43 +24,62 @@ public class Main {
             scanner.nextLine();
             switch (choice) {
                 case 1: {
-                    System.out.println("Enter index want delete : ");
-                    int index = scanner.nextInt();
-                    materials = materialManagerment.deleteMaterial(index);
-                    System.out.println(Arrays.toString(materials));
+                    materials = deleteInfo(scanner, materialManagement);
                     break;
                 }
                 case 2: {
-                    System.out.println("1: Add meat");
-                    System.out.println("2: Add crispy flour");
-                    System.out.println("Enter choice");
-                    int choiceNumber = scanner.nextInt();
-                    switch (choiceNumber) {
-                        case 1: {
-                            materials = addMeat(scanner, materialManagerment);
-                            break;
-                        }
-                        case 2: {
-                            materials = addCrispyFlour(scanner, materialManagerment);
-                            break;
-                        }
-                    }
+                    materials = runSubMenu(scanner, materialManagement, materials);
+                    break;
                 }
                 case 3: {
-                    System.out.println("Enter the index you want to calculate");
-                    int indexCalculate = scanner.nextInt();
-                    if (materials[indexCalculate] instanceof Meat) {
-                        displayMoneyOfMeat(materials[indexCalculate]);
-                    } else {
-                        displayMoneyOfCrispyFlour(materials[indexCalculate]);
-                    }
+                    calculatorMoney(scanner, materials);
                     break;
                 }
                 case 0: {
                     System.exit(0);
                 }
+                default: {
+                    System.out.println("Not found!! Please re-enter!!");
+                }
             }
         } while (choice != 0);
+    }
+
+    private static void calculatorMoney(Scanner scanner, Material[] materials) {
+        System.out.println("Enter the index you want to calculate");
+        int indexCalculate = scanner.nextInt();
+        if (materials[indexCalculate] instanceof Meat) {
+            displayMoneyOfMeat(materials[indexCalculate]);
+        } else {
+            displayMoneyOfCrispyFlour(materials[indexCalculate]);
+        }
+    }
+
+    private static Material[] deleteInfo(Scanner scanner, MaterialManagement materialManagement) {
+        Material[] materials;
+        System.out.println("Enter index want delete : ");
+        int index = scanner.nextInt();
+        materials = materialManagement.deleteMaterial(index);
+        System.out.println(Arrays.toString(materials));
+        return materials;
+    }
+
+    private static Material[] runSubMenu(Scanner scanner, MaterialManagement materialManagement, Material[] materials) {
+        System.out.println("1: Add meat");
+        System.out.println("2: Add crispy flour");
+        System.out.println("Enter choice");
+        int choiceNumber = scanner.nextInt();
+        switch (choiceNumber) {
+            case 1: {
+                materials = addMeat(scanner, materialManagement);
+                break;
+            }
+            case 2: {
+                materials = addCrispyFlour(scanner, materialManagement);
+                break;
+            }
+        }
+        return materials;
     }
 
     private static void initMaterial(int size, Material[] materials) {
@@ -81,22 +105,22 @@ public class Main {
         System.out.println("Difference money : " + ((Meat) material).getDifferenceMoney() + "VND");
     }
 
-    private static Material[] addMeat(Scanner scanner, MaterialManagerment materialManagerment) {
+    private static Material[] addMeat(Scanner scanner, MaterialManagement materialManagement) {
         Material[] materials;
         System.out.println("Enter index want add meat : ");
         int indexAddMeat = scanner.nextInt();
         scanner.nextLine();
-        materials = materialManagerment.insertMeat(scanner, indexAddMeat);
+        materials = materialManagement.insertMeat(scanner, indexAddMeat);
         System.out.println("Meat added success!! \n" + Arrays.toString(materials));
         return materials;
     }
 
-    private static Material[] addCrispyFlour(Scanner scanner, MaterialManagerment materialManagerment) {
+    private static Material[] addCrispyFlour(Scanner scanner, MaterialManagement materialManagement) {
         Material[] materials;
         System.out.println("Enter index want add crispy flour : ");
         int indexAddCrispyFlour = scanner.nextInt();
         scanner.nextLine();
-        materials = materialManagerment.insertCrispyFlour(scanner, indexAddCrispyFlour);
+        materials = materialManagement.insertCrispyFlour(scanner, indexAddCrispyFlour);
         System.out.println(Arrays.toString(materials));
         System.out.println("Crispy flour added success!! \n" + Arrays.toString(materials));
         return materials;
@@ -108,5 +132,4 @@ public class Main {
         System.out.println("3: Real Money");
         System.out.println("0: Exit");
     }
-
 }
